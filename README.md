@@ -61,7 +61,7 @@ Otter.ai costs £20/month. This costs pennies. OpenOtter is a mobile-first web a
 
 **v2 — Integrations (next):** Notion OAuth so the app can write to your workspace, AI-generated summaries via Claude, and email notifications (success with a Notion link, failure with error details). The full loop: upload on your phone → Notion page appears a few minutes later with a summary in your inbox.
 
-**Long-term:** A configuration UI and self-hostable setup flow so others can connect their own API keys and Notion workspace without touching code.
+**Long-term:** The Notion OAuth integration in v2 will be built behind a thin abstraction layer so it can be swapped out for [Nango](https://nango.dev/) — a managed OAuth platform that handles token refresh, provider quirks, and multi-user credential storage. Nango is overkill for a single-user personal tool, but designing v2 with a clean provider interface means adding it later (and with it, support for other services beyond Notion) is a small lift rather than a rewrite.
 
 ## Stack
 
