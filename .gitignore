@@ -1,0 +1,37 @@
+# Dependencies
+node_modules/
+
+# Next.js
+.next/
+out/
+
+# Environment files — never commit secrets
+.env
+.env.*
+!.env.example
+!.env.local.example
+
+# PM2 local overrides — keep ecosystem.config.js (no secrets), ignore local variants
+ecosystem.config.local.js
+
+# Certs / keys
+*.pem
+*.key
+
+# Build artifacts
+tsconfig.tsbuildinfo
+
+# .planning operational history — may contain infra-specific details
+# Keep: ROADMAP.md, PROJECT.md, REQUIREMENTS.md, MILESTONES.md, milestones/, seeds/, notes/, research/, todos/
+.planning/phases/
+.planning/quick/
+.planning/debug/
+.planning/threads/
+.planning/config.json
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store

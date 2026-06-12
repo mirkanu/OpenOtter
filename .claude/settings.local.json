@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "Skill(gsd-code-review)",
+      "Skill(gsd-quick)",
+      "Skill(gsd-ui-phase)"
+    ]
+  }
+}
