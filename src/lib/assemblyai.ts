@@ -32,7 +32,7 @@ export async function submitTranscription(filepath: string): Promise<string> {
     audio: filepath,  // AssemblyAI accepts local file paths
     speaker_labels: true,
     speaker_options: {
-      min_speakers_expected: 2,
+      min_speakers_expected: 1,
       max_speakers_expected: 10,
     },
   });
