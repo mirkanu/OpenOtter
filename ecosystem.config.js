@@ -1,3 +1,27 @@
+// Parse the shared env file with Node fs to avoid PM2's shell-based parser
+// failing on lines with unquoted spaces (e.g. display names with < >)
+const fs = require('fs');
+function loadEnv(filePath) {
+  try {
+    const env = {};
+    for (const line of fs.readFileSync(filePath, 'utf8').split('\n')) {
+      const trimmed = line.trim();
+      if (!trimmed || trimmed.startsWith('#')) continue;
+      const idx = trimmed.indexOf('=');
+      if (idx === -1) continue;
+      const key = trimmed.slice(0, idx).trim();
+      let val = trimmed.slice(idx + 1);
+      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1);
+      }
+      env[key] = val;
+    }
+    return env;
+  } catch (_) { return {}; }
+}
+
+const sharedEnv = loadEnv('/home/services/.env.production');
+
 module.exports = {
   apps: [
     {
@@ -5,8 +29,8 @@ module.exports = {
       script: 'node_modules/.bin/next',
       args: 'start -p 3009',
       cwd: '/data/home/OpenOtter',
-      env_file: '/home/services/.env.production',
       env: {
+        ...sharedEnv,
         NODE_ENV: 'production',
         PORT: '3009',
         UPLOAD_DIR: '/home/services/openotter/uploads',
