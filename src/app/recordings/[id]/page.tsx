@@ -3,23 +3,10 @@ import { ExportButton } from "@/components/ExportButton";
 import SyncedTranscript from "@/components/SyncedTranscript";
 import { formatDuration, formatDate } from "@/lib/utils";
 import type { RecordingMetadata } from "@/lib/types";
+import { getRecordingById } from "@/lib/recording-store";
 
 interface PageProps {
   params: Promise<{ id: string }>;
-}
-
-async function getRecording(id: string): Promise<RecordingMetadata | null> {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_APP_URL ||
-    `http://localhost:${process.env.PORT || 3009}`;
-  const response = await fetch(`${baseUrl}/api/recordings/${id}`, {
-    cache: "no-store",
-  });
-  if (!response.ok) {
-    if (response.status === 404) return null;
-    throw new Error("Failed to fetch recording");
-  }
-  return response.json();
 }
 
 export default async function RecordingDetailPage({ params }: PageProps) {
@@ -29,7 +16,7 @@ export default async function RecordingDetailPage({ params }: PageProps) {
   let error: string | null = null;
 
   try {
-    recording = await getRecording(id);
+    recording = getRecordingById(id);
   } catch (err) {
     error = err instanceof Error ? err.message : "Unknown error";
   }
