@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     // Validate file type
     if (!isValidAudioFile(file)) {
       return NextResponse.json(
-        { error: "Invalid file type. Please upload MP3, WAV, or M4A audio file." },
+        { error: "Invalid file type. Please upload MP3, WAV, M4A, or AAC audio file." },
         { status: 400 }
       );
     }

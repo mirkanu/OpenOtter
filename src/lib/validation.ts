@@ -15,12 +15,15 @@ export function isValidAudioFile(file: File): boolean {
   const validTypes = [
     'audio/mpeg',     // MP3
     'audio/wav',      // WAV
-    'audio/mp4',      // M4A
+    'audio/mp4',      // M4A/MP4
     'audio/x-m4a',    // M4A alternative
     'audio/mp3',      // MP3 alternative
+    'audio/aac',      // AAC audio (common in m4a)
+    'audio/x-m4p',    // Protected M4A (unlikely for voice memos)
+    'video/mp4',      // Some iOS m4a files are misidentified as video/mp4
   ];
 
-  const validExtensions = ['.mp3', '.wav', '.m4a'];
+  const validExtensions = ['.mp3', '.wav', '.m4a', '.aac'];
   const hasValidExtension = validExtensions.some(ext =>
     file.name.toLowerCase().endsWith(ext)
   );
