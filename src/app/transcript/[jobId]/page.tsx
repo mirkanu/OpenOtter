@@ -18,6 +18,14 @@ export default function TranscriptPage() {
   const [transcript, setTranscript] = useState<TranscriptResult | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [elapsed, setElapsed] = useState(0);
+
+  // Elapsed time counter while loading
+  useEffect(() => {
+    if (!loading) return;
+    const tick = setInterval(() => setElapsed(s => s + 1), 1000);
+    return () => clearInterval(tick);
+  }, [loading]);
 
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
@@ -60,12 +68,8 @@ export default function TranscriptPage() {
     // Initial poll
     pollTranscript();
 
-    // Poll every 3 seconds if still processing
-    if (loading) {
-      intervalId = setInterval(() => {
-        pollTranscript();
-      }, 3000);
-    }
+    // Poll every 3 seconds
+    intervalId = setInterval(pollTranscript, 3000);
 
     return () => {
       shouldContinue = false;
@@ -92,7 +96,25 @@ export default function TranscriptPage() {
           {loading && (
             <div className="text-center py-12">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto mb-4"></div>
-              <p className="text-gray-600">Processing audio... This may take a few minutes.</p>
+              {transcript?.status === "queued" ? (
+                <>
+                  <p className="text-gray-700 font-medium">Waiting in queue…</p>
+                  <p className="text-sm text-gray-500 mt-1">AssemblyAI will start transcribing shortly.</p>
+                </>
+              ) : (
+                <>
+                  <p className="text-gray-700 font-medium">Transcribing audio…</p>
+                  <p className="text-sm text-gray-500 mt-1">Speaker diarization takes a little longer.</p>
+                </>
+              )}
+              <p className="text-xs text-gray-400 mt-3">
+                {Math.floor(elapsed / 60) > 0
+                  ? `${Math.floor(elapsed / 60)}m ${elapsed % 60}s elapsed`
+                  : `${elapsed}s elapsed`}
+              </p>
+              <div className="mt-4 mx-auto w-48 h-1.5 bg-gray-100 rounded-full overflow-hidden">
+                <div className="h-full bg-indigo-400 rounded-full animate-pulse" style={{ width: "60%" }} />
+              </div>
             </div>
           )}
 

@@ -13,7 +13,7 @@ export interface TranscriptUtterance {
 
 export interface TranscriptResult {
   id: string;
-  status: 'processing' | 'completed' | 'error';
+  status: 'queued' | 'processing' | 'completed' | 'error';
   text?: string;
   utterances?: TranscriptUtterance[];
   error?: string;
@@ -77,7 +77,7 @@ export const TranscriptUtteranceSchema = z.object({
 
 export const TranscriptResultSchema = z.object({
   id: z.string(),
-  status: z.enum(['processing', 'completed', 'error']),
+  status: z.enum(['queued', 'processing', 'completed', 'error']),
   text: z.string().optional(),
   utterances: z.array(TranscriptUtteranceSchema).optional(),
   error: z.string().optional(),

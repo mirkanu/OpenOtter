@@ -52,14 +52,16 @@ export async function getTranscriptionResult(
 
   const transcript = await client.transcripts.get(transcriptId);
 
-  // Map AssemblyAI status to our simplified status
-  let status: 'processing' | 'completed' | 'error';
+  // Map AssemblyAI status to our status type
+  let status: 'queued' | 'processing' | 'completed' | 'error';
 
   const transcriptStatus = transcript.status as string;
   if (transcriptStatus === 'completed') {
     status = 'completed';
   } else if (transcriptStatus === 'error' || transcriptStatus === 'cancelled') {
     status = 'error';
+  } else if (transcriptStatus === 'queued') {
+    status = 'queued';
   } else {
     status = 'processing';
   }

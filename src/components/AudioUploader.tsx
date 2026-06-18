@@ -44,25 +44,43 @@ export default function AudioUploader({ onUploadComplete }: AudioUploaderProps) 
     setError(null);
 
     try {
-      // Create FormData for multipart upload
       const formData = new FormData();
       formData.append("file", file);
-      // Send file.lastModified so the server can store file_created_at (D-11)
       formData.append("fileLastModified", file.lastModified.toString());
 
-      // Upload file to server-side storage
-      const uploadResponse = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
+      // Use XHR so we get real upload progress events (fetch doesn't support this)
+      const uploadData = await new Promise<UploadResponse>((resolve, reject) => {
+        const xhr = new XMLHttpRequest();
+
+        xhr.upload.addEventListener("progress", (e) => {
+          if (e.lengthComputable) {
+            setProgress(Math.round((e.loaded / e.total) * 100));
+          }
+        });
+
+        xhr.addEventListener("load", () => {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            try {
+              resolve(JSON.parse(xhr.responseText) as UploadResponse);
+            } catch {
+              reject(new Error("Invalid server response"));
+            }
+          } else {
+            try {
+              const err = JSON.parse(xhr.responseText);
+              reject(new Error(err.error || "Upload failed"));
+            } catch {
+              reject(new Error(`Upload failed (${xhr.status})`));
+            }
+          }
+        });
+
+        xhr.addEventListener("error", () => reject(new Error("Network error during upload")));
+        xhr.addEventListener("abort", () => reject(new Error("Upload cancelled")));
+
+        xhr.open("POST", "/api/upload");
+        xhr.send(formData);
       });
-
-      if (!uploadResponse.ok) {
-        const errorData = await uploadResponse.json();
-        throw new Error(errorData.error || "Failed to upload file");
-      }
-
-      const uploadData: UploadResponse = await uploadResponse.json();
-      setProgress(100);
 
       // Submit transcription job with filepath
       const transcribeResponse = await fetch("/api/transcribe", {
