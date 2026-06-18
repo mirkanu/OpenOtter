@@ -75,6 +75,8 @@ None identified yet.
 |---|-------------|------|--------|-----------|
 | 260609-ux1 | Implement local Hetzner filesystem storage solution (replacing Vercel Blob) | 2026-06-09 | 4e57cdc | [260609-ux1-implement-local-hetzner-filesystem-stora](./quick/260609-ux1-implement-local-hetzner-filesystem-stora/) |
 | 260611-cyx | Restore Phase 1.5 plans from Vercel Postgres back to SQLite + local filesystem, and fix ROADMAP.md Vercel references | 2026-06-11 | 970d462 | [260611-cyx-restore-phase-1-5-plans-from-vercel-post](./quick/260611-cyx-restore-phase-1-5-plans-from-vercel-post/) |
+| 260618-m4a | Fix m4a upload rejection: remove 50MB cap from isValidAudioFile (size checked separately in AudioUploader); add .mp4 extension | 2026-06-18 | ee799e9 | — |
+| 260618-prg | Real upload progress via XHR; transcript page shows queued/processing states with elapsed timer and animated bar | 2026-06-18 | b8f717d | — |
 
 ### Todos
 
